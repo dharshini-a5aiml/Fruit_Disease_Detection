@@ -33,6 +33,9 @@ Classes:
 - Two-stage training: top layers first, then fine-tuning the last 30 layers
 - Test accuracy: **86.71%** on 286 unseen test images
 
+### Training Results
+![Training plot](model/training_plot.png)
+
 ## Features
 - Upload a JPG or PNG image and preview it
 - Predicted fruit, disease and confidence percentage

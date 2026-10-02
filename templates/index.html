@@ -7,44 +7,134 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <div class="card">
-    <h1>🍎 Fruit Disease Detection</h1>
-    <p class="sub">Upload a photo of an apple, guava or mango and the AI model will predict its disease.</p>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <span class="tag">AI &middot; Deep Learning &middot; Computer Vision</span>
+      <h1>🍎 Fruit Disease Detection</h1>
+      <p>Upload a photo of an apple, guava or mango and our MobileNetV2 model will identify the disease in seconds.</p>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div class="steps">
+      <div class="step"><span>1</span> Upload</div>
+      <div class="line"></div>
+      <div class="step"><span>2</span> Analyze</div>
+      <div class="line"></div>
+      <div class="step"><span>3</span> Result</div>
+    </div>
 
     {% if error %}
-      <div class="error">{{ error }}</div>
+      <div class="alert error">⚠️ {{ error }}</div>
     {% endif %}
 
-    <form method="POST" enctype="multipart/form-data">
-      <input type="file" name="image" id="image" accept=".jpg,.jpeg,.png" required>
-      <img id="preview" class="preview hidden" alt="Preview">
-      <button type="submit">Predict</button>
-    </form>
+    <section class="card">
+      <form method="POST" enctype="multipart/form-data" id="form">
+        <label class="drop" id="drop" for="image">
+          <input type="file" name="image" id="image" accept=".jpg,.jpeg,.png" required>
+          <img id="preview" class="hidden" alt="Preview">
+          <div id="dropText">
+            <div class="icon">📷</div>
+            <strong>Click to choose an image</strong>
+            <small>or drag and drop here &middot; JPG or PNG, max 8 MB</small>
+          </div>
+        </label>
+        <button type="submit" id="btn">🔍 Predict Disease</button>
+      </form>
+    </section>
 
     {% if disease %}
-      <div class="result">
-        <img src="{{ url_for('static', filename=image_file) }}" class="preview" alt="Uploaded fruit">
-        <p><strong>Fruit:</strong> {{ fruit }}</p>
-        <p class="pred"><strong>Prediction:</strong> {{ disease }}</p>
-        <p><strong>Confidence:</strong> {{ confidence }}%</p>
-        <div class="bar"><div class="fill" style="width: {{ confidence }}%"></div></div>
-        {% if low_confidence %}
-          <p class="warn">Low confidence. The image may be unclear or not an apple, guava or mango.</p>
-        {% endif %}
-        <a class="again" href="/">Upload another image</a>
+    <section class="card result">
+      <h2>Analysis Result</h2>
+      <div class="result-grid">
+        <img src="{{ url_for('static', filename=image_file) }}" class="result-img" alt="Uploaded fruit">
+
+        <div class="result-info">
+          <p class="label">Fruit</p>
+          <p class="value">{{ fruit }}</p>
+
+          <p class="label">Predicted condition</p>
+          <p class="pill {{ 'ok' if disease == 'Healthy' else 'bad' }}">
+            {{ '✅' if disease == 'Healthy' else '🦠' }} {{ disease }}
+          </p>
+
+          <div class="ring-wrap">
+            <div class="ring" style="--p: {{ confidence }}">
+              <div class="ring-inner">{{ confidence }}%</div>
+            </div>
+            <span class="label">Confidence</span>
+          </div>
+        </div>
       </div>
+
+      {% if low_confidence %}
+        <div class="alert warn">⚠️ Low confidence. The image may be unclear, or it may not be an apple, guava or mango.</div>
+      {% endif %}
+
+      
+      
+            {% if description %}
+        <div class="info-card">
+          <h3>About this condition</h3>
+          <p>{{ description }}</p>
+          <p class="tip"><strong>💡 General care tip:</strong> {{ care_tip }}</p>
+          <small>General guidance only. For a real crop problem, consult a local agriculture expert.</small>
+        </div>
+      {% endif %}
+      {% if top3 %}
+        <h3>Top 3 predictions</h3>
+        {% for r in top3 %}
+          <div class="row">
+            <span class="row-name">{{ r.fruit }} &ndash; {{ r.disease }}</span>
+            <div class="bar"><div class="fill" style="width: {{ r.confidence }}%"></div></div>
+            <span class="row-pct">{{ r.confidence }}%</span>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <a class="again" href="/">⟳ Analyze another image</a>
+    </section>
     {% endif %}
+
+  </main>
+
+  <footer>
+    Fruit Disease Detection &middot; MobileNetV2 transfer learning &middot; 12 classes &middot; 86.71% test accuracy<br>
+    <small>Prototype for educational use. Not a substitute for expert diagnosis.</small>
+  </footer>
+
+  <div class="loader hidden" id="loader">
+    <div class="spinner"></div>
+    <p>Analyzing image...</p>
   </div>
 
   <script>
     const input = document.getElementById("image");
     const preview = document.getElementById("preview");
-    input.addEventListener("change", () => {
-      const f = input.files[0];
-      if (f) {
-        preview.src = URL.createObjectURL(f);
-        preview.classList.remove("hidden");
-      }
+    const dropText = document.getElementById("dropText");
+    const drop = document.getElementById("drop");
+
+    function showPreview(file) {
+      if (!file) return;
+      preview.src = URL.createObjectURL(file);
+      preview.classList.remove("hidden");
+      dropText.classList.add("hidden");
+    }
+    input.addEventListener("change", () => showPreview(input.files[0]));
+
+    ["dragenter", "dragover"].forEach(ev =>
+      drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+    ["dragleave", "drop"].forEach(ev =>
+      drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+    drop.addEventListener("drop", e => {
+      input.files = e.dataTransfer.files;
+      showPreview(input.files[0]);
+    });
+
+    document.getElementById("form").addEventListener("submit", () => {
+      if (input.files.length) document.getElementById("loader").classList.remove("hidden");
     });
   </script>
 </body>

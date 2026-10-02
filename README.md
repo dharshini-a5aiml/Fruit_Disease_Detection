@@ -40,10 +40,13 @@ Classes:
 ![Confusion matrix](model/confusion_matrix.png)
 
 ## Features
-- Upload a JPG or PNG image and preview it
-- Predicted fruit, disease and confidence percentage
+- Modern web interface with drag-and-drop image upload and preview
+- Predicted fruit, disease and confidence percentage with a confidence ring
+- Top 3 predictions with confidence bars
+- Short description and general care tip for each detected disease
 - Low-confidence warning for unclear or unrelated images
-- Handles invalid file types, missing files and a missing model file
+- Handles invalid file types, missing files, large files and a missing model file
+- Opens the browser automatically when the app starts
 
 ## Installation
 ```

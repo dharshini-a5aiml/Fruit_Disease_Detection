@@ -36,6 +36,9 @@ Classes:
 ### Training Results
 ![Training plot](model/training_plot.png)
 
+### Confusion Matrix
+![Confusion matrix](model/confusion_matrix.png)
+
 ## Features
 - Upload a JPG or PNG image and preview it
 - Predicted fruit, disease and confidence percentage

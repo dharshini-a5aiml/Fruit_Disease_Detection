@@ -1,0 +1,29 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh; padding: 20px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(135deg, #e8f5e9, #fff8e1);
+  display: flex; justify-content: center; align-items: flex-start;
+}
+.card {
+  background: #fff; width: 100%; max-width: 480px;
+  margin-top: 30px; padding: 28px; border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12); text-align: center;
+}
+h1 { margin: 0 0 8px; color: #2e7d32; font-size: 1.6rem; }
+.sub { color: #555; font-size: 0.95rem; margin-bottom: 20px; }
+input[type=file] { width: 100%; margin-bottom: 14px; }
+button {
+  width: 100%; padding: 12px; border: none; border-radius: 8px;
+  background: #2e7d32; color: #fff; font-size: 1rem; cursor: pointer;
+}
+button:hover { background: #1b5e20; }
+.preview { max-width: 100%; max-height: 260px; border-radius: 10px; margin: 10px 0; }
+.hidden { display: none; }
+.result { margin-top: 22px; padding-top: 16px; border-top: 1px solid #eee; }
+.pred { font-size: 1.2rem; color: #2e7d32; }
+.bar { height: 10px; background: #e0e0e0; border-radius: 6px; overflow: hidden; margin: 8px 0 14px; }
+.fill { height: 100%; background: #43a047; }
+.error { background: #ffebee; color: #c62828; padding: 10px; border-radius: 8px; margin-bottom: 14px; }
+.warn { background: #fff3e0; color: #e65100; padding: 10px; border-radius: 8px; }
+.again { display: inline-block; margin-top: 8px; color: #2e7d32; }

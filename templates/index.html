@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fruit Disease Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="card">
+    <h1>🍎 Fruit Disease Detection</h1>
+    <p class="sub">Upload a photo of an apple, guava or mango and the AI model will predict its disease.</p>
+
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+      <input type="file" name="image" id="image" accept=".jpg,.jpeg,.png" required>
+      <img id="preview" class="preview hidden" alt="Preview">
+      <button type="submit">Predict</button>
+    </form>
+
+    {% if disease %}
+      <div class="result">
+        <img src="{{ url_for('static', filename=image_file) }}" class="preview" alt="Uploaded fruit">
+        <p><strong>Fruit:</strong> {{ fruit }}</p>
+        <p class="pred"><strong>Prediction:</strong> {{ disease }}</p>
+        <p><strong>Confidence:</strong> {{ confidence }}%</p>
+        <div class="bar"><div class="fill" style="width: {{ confidence }}%"></div></div>
+        {% if low_confidence %}
+          <p class="warn">Low confidence. The image may be unclear or not an apple, guava or mango.</p>
+        {% endif %}
+        <a class="again" href="/">Upload another image</a>
+      </div>
+    {% endif %}
+  </div>
+
+  <script>
+    const input = document.getElementById("image");
+    const preview = document.getElementById("preview");
+    input.addEventListener("change", () => {
+      const f = input.files[0];
+      if (f) {
+        preview.src = URL.createObjectURL(f);
+        preview.classList.remove("hidden");
+      }
+    });
+  </script>
+</body>
+</html>
